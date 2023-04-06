@@ -1,0 +1,815 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/JAKOB_5/ProjectEic/1.0.0
+  - description: Local
+    url: localhost:8080
+info:
+  version: "1.0.0"
+  title: ProjectEic
+  description: The API for ProjectEic - the Open Source Kahoot + Quizlet Killer
+paths:
+  /user:
+    post:
+      tags:
+        - User
+      summary: Add a new user
+      operationId: addUser
+      parameters: 
+        - name: name
+          in: query
+          schema:
+            type: string
+        - name: mail
+          in: query
+          schema:
+            type: string
+      requestBody:
+        description: Create a new User
+        content:
+          application/json:
+            schema:
+             "$ref": "#/components/schemas/User"
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": '#/components/schemas/User'
+        405:
+          description: Invalid input
+        409:
+          description: Already exists
+  /user/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/UserId'
+    get:
+      tags:
+        - User
+      summary: Read a user
+      operationId: getUser
+      responses:
+        200:
+          description: The user corresponding to the provided `userId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        404:
+          description: No school found for the provided `userId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - User
+      summary: Update an existing user
+      operationId: updateUser
+      parameters: 
+        - name: name
+          in: query
+          schema:
+            type: string
+        - name: address
+          in: query
+          schema:
+            type: string
+        - name: city
+          in: query
+          schema:
+            type: string
+      requestBody:
+        description: Update an existing user by Id
+        content:
+          application/json:
+            schema:
+             "$ref": "#/components/schemas/User"
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                "$ref": '#/components/schemas/User'
+        405:
+          description: Invalid input
+    delete:
+      tags:
+        - User
+      summary: Deletes a user
+      description: delete a user
+      operationId: deleteUser
+      responses:
+        200:
+          description: The user corresponding to the provided `userId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        404:
+          description: No User found for the provided `userId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"                   
+  /school:
+    post:
+      tags:
+        - School
+      summary: Add a new school
+      operationId: addSchool
+      parameters: 
+        - name: school data
+          in: query
+          schema:
+            $ref: '#/components/schemas/SchoolData'
+        - name: adminid
+          in: query
+          schema:
+            type: number
+      requestBody:
+        description: Create a new school
+        content:
+          application/json:
+            schema:
+             $ref: "#/components/schemas/School"
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+        405:
+          description: Invalid input
+        409:
+          description: Already exists
+  /school/{schoolId}:
+    parameters:
+      - name: schoolId
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/SchoolId'
+    get:
+      tags:
+        - School
+      summary: Read a school
+      operationId: getSchool
+      responses:
+        200:
+          description: The school corresponding to the provided `schoolId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/School"
+        404:
+          description: No school found for the provided `schoolId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - School
+      summary: Update an existing school
+      operationId: updateSchool
+      parameters: 
+        - name: school data
+          in: query
+          schema:
+            $ref: '#/components/schemas/SchoolData'
+      requestBody:
+        description: Update an existing school by Id
+        content:
+          application/json:
+            schema:
+             $ref: "#/components/schemas/School"
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+        405:
+          description: Invalid input
+    delete:
+      tags:
+        - School
+      summary: Deletes a school
+      description: delete a school
+      operationId: deleteSchool
+      responses:
+        200:
+          description: The school corresponding to the provided `schoolId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/School'
+        404:
+          description: No school found for the provided `schoolId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"      
+  /school/{schoolId}/courses:
+    parameters:
+      - name: schoolId
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/SchoolId'
+    get:
+      tags:
+        - School
+        - Course
+      summary: Reads all Courses in a School
+      operationId: getCoursesOfSchool
+      responses:
+        200:
+          description: The courses of the school corresponding to the provided `schoolId`
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Course'
+        404:
+          description: No school found for the provided `schoolId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - School
+        - Course
+      parameters: 
+        - name: course data
+          in: query
+          schema:
+            $ref: '#/components/schemas/CourseData'
+      summary: Creates a new course in the provided school
+      operationId: createCourse
+      responses:
+        200:
+          description: Creates a new course in the provided school with the `schoolId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        404:
+          description: No school found for the provided `schoolId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /courses/{courseId}:
+    parameters:
+      - name: courseId
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/CourseId'     
+    get:
+      tags:
+        - Course
+      summary: Reads a course
+      operationId: getCourse
+      responses:
+        200:
+          description: The course data corresponding to the provided `courseId`
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Course'
+        404:
+          description: No course found for the provided `courseId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - Course
+      parameters: 
+        - name: course data
+          in: query
+          schema:
+            $ref: '#/components/schemas/CourseData'
+      summary: Updates a course in the provided school
+      operationId: updateCourse
+      responses:
+        200:
+          description: Updates the course with the provided `courseId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        404:
+          description: No school or course found for the provided `schoolId` or `courseId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+    delete:
+      tags:
+        - Course
+      summary: Deletes a course
+      description: delete a course
+      operationId: deleteCourse
+      responses:
+        200:
+          description: The course corresponding to the provided `courseId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        404:
+          description: No course found for the provided `courselId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"                  
+  /courses/{courseId}/studysets:
+    parameters:
+      - name: courseId
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/CourseId' 
+    get:
+      tags:
+        - Course
+        - Studyset
+      summary: Reads all Studysets in a Course
+      operationId: getStudysetsOfCourse
+      responses:
+        200:
+          description: The studysets of the course corresponding to the provided `courseId`
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Studyset'
+        404:
+          description: No course found for the provided `courseId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - Course
+        - Studyset
+      parameters: 
+        - name: course data
+          in: query
+          schema:
+            $ref: '#/components/schemas/StudysetData'
+      summary: Creates a new studyset in the provided course
+      operationId: createSet
+      responses:
+        200:
+          description: Creates a new studyset in the provided course with the `courseId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Studyset'
+        404:
+          description: No course found for the provided `courselId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /studysets/{studysetId}:
+    parameters:
+      - name: studysetId
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/StudysetId' 
+    get:
+      tags:
+        - Studyset
+      summary: Reads a studyset
+      operationId: getStudyset
+      responses:
+        200:
+          description: The course data corresponding to the provided `studysetId`
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Studyset'
+        404:
+          description: No studyset found for the provided `studysetId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - Studyset
+      parameters: 
+        - name: course data
+          in: query
+          schema:
+            $ref: '#/components/schemas/StudysetData'
+      summary: Updates the studyset with the provided  `studysetId`
+      operationId: updateStudyset
+      responses:
+        200:
+          description: Updates the studyset with the provided `studysetId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Studyset'
+        404:
+          description: No studyset found for the provided `studysetId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+    delete:
+      tags:
+        - Studyset
+      summary: Deletes a studyset
+      description: delete a studyset
+      operationId: deleteStudyset
+      responses:
+        200:
+          description: The studyset corresponding to the provided `studysetId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Studyset'
+        404:
+          description: No studyset found for the provided `studysetId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+  /studysets/{studysetId}/items:
+    parameters:
+      - name: studysetId
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/StudysetId' 
+    get:
+      tags:
+        - Studyset
+      summary: Reads all Items of a Studyset
+      operationId: getStudysetsItems
+      responses:
+        200:
+          description: The Items of the Studyset corresponding to the provided `studysetId`
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudysetItem'
+        404:
+          description: No Studyset found for the provided `studysetId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags:
+        - Studyset
+      parameters: 
+        - name: course data
+          in: query
+          schema:
+            $ref: '#/components/schemas/StudysetItemData'
+      summary: Creates a new studyset in the provided course
+      operationId: createItem
+      responses:
+        200:
+          description: Creates a new item in the provided studyset with the `studysetId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudysetItem'
+        404:
+          description: No course found for the provided `courselId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /studysets/items/{itemId}:
+    parameters:
+      - name: itemId
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/StudysetItemId' 
+    get:
+      tags:
+        - Studyset
+      summary: Reads a studyset item
+      operationId: getStudysetItem
+      responses:
+        200:
+          description: The studyset item corresponding to the provided `itemId`
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/StudysetItem'
+        404:
+          description: No studyset item found for the provided `itemId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    put:
+      tags:
+        - Studyset
+      parameters: 
+        - name: item data
+          in: query
+          schema:
+            $ref: '#/components/schemas/StudysetItemData'
+      summary: Updates a studyset
+      operationId: updateStudysetItem
+      responses:
+        200:
+          description: Updates the studyset with the provided `itemId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Studyset'
+        404:
+          description: No studysetitem found for the provided `itemId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"  
+    delete:
+      tags:
+        - Studyset
+      summary: Deletes a studyset item
+      description: delete a studyset item
+      operationId: deleteStudysetItem
+      responses:
+        200:
+          description: The studyset item corresponding to the provided `itemId`
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudysetItem'
+        404:
+          description: No studyset item found for the provided `itemId`
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"    
+components:
+  schemas:
+    UserId:
+      type: number
+    UserData:
+      type: object
+      required:
+        - mail
+      properties:
+        name:
+          type: string
+        maiL:
+          type: string
+    User:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/UserId'
+        userData:
+           $ref: '#/components/schemas/UserData'
+    SchoolId:
+      type: number
+    SchoolData:
+      type: object
+      required: 
+        - name
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        city:
+          type: string
+    School:
+      type: object
+      required: 
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/SchoolId'
+        schoolData:
+          $ref:  '#/components/schemas/SchoolData'
+        admin:
+          $ref: '#/components/schemas/User'
+    CourseId:
+      type: number
+    CourseData:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+    Course:
+      type: object
+      required: 
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/CourseId'
+        courseData:
+          $ref: '#/components/schemas/CourseData'
+        schoolId:
+          $ref: '#/components/schemas/SchoolId'
+    StudysetId:
+      type: number
+    StudysetData:
+      type: object
+      required:
+        - name
+      properties:
+        name: 
+          type: string
+    Studyset:
+      type: object
+      required: 
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/StudysetId'
+        studysetData:
+          $ref: '#/components/schemas/StudysetData'
+        creator:
+          $ref: '#/components/schemas/User' 
+        courseId:
+          $ref: '#/components/schemas/CourseId'
+    StudysetItemId:
+      type: number
+    StudysetItemData:
+      type: object
+      required:
+        - question
+        - answer
+      properties:
+        question: 
+          type: string
+        answer: 
+          type: string 
+    StudysetItem:
+      type: object
+      required: 
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/StudysetItemId'
+        studysetData:
+          $ref: '#/components/schemas/StudysetItemData'
+        studysetId:
+          $ref: '#/components/schemas/StudysetId'
+    
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          description: A human readable error message
+          type: string
